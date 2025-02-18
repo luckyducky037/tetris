@@ -15,43 +15,48 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: Windows VS2019, os: windows-2019  }
-        - { name: Windows VS2022, os: windows-2022  }
-        - { name: Linux GCC,      os: ubuntu-latest }
-        - { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
-        - { name: macOS,          os: macos-latest  }
+          - { name: Windows VS2019, os: windows-2019 }
+          - { name: Windows VS2022, os: windows-2022 }
+          - { name: Linux GCC,      os: ubuntu-latest }
+          - { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
+          - { name: macOS,          os: macos-latest }
         config:
-        - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
-        - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
+          - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
+          - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
     steps:
-    - name: Install Linux Dependencies
-      if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev libsfml-dev
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev libsfml-dev
 
-    - name: Install MacOS Dependencies
-      if: runner.os == 'MacOS'
-      run: brew install sfml@2
+      - name: Install MacOS Dependencies
+        if: runner.os == 'MacOS'
+        run: brew install sfml@2
 
-    - name: Set up vcpkg (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        git clone https://github.com/microsoft/vcpkg.git
-        cd vcpkg
-        ./bootstrap-vcpkg.bat
-        ./vcpkg integrate install
+      - name: Set up vcpkg (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          ./bootstrap-vcpkg.bat
+          ./vcpkg integrate install
 
-    - name: Install SFML via vcpkg (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        cd vcpkg  # Ensure we're inside the vcpkg directory
-        ./vcpkg install sfml
+      - name: Install SFML via vcpkg (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd vcpkg  # Ensure we're inside the vcpkg directory
+          ./vcpkg install sfml
 
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Configure
-      run: cmake -B build ${{matrix.platform.flags}} ${{matrix.config.flags}}
+      - name: Configure
+        run: |
+          if [[ "${{ runner.os }}" == "Windows"* ]]; then
+            cmake -B build ${{matrix.platform.flags}} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake
+          else
+            cmake -B build ${{matrix.platform.flags}}
+          fi
 
-    - name: Build
-      run: cmake --build build --config Release
+      - name: Build
+        run: cmake --build build --config Release
