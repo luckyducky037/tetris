@@ -53,8 +53,11 @@ jobs:
       - name: Configure
         run: |
           if [[ "${{ runner.os }}" == "Windows"* ]]; then
-            cmake -B build ${{matrix.platform.flags}} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake
-
+            # Convert path to forward slashes for bash compatibility
+            VCPKG_PATH="${{ github.workspace }}\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
+            # Replace backslashes with forward slashes
+            VCPKG_PATH=$(echo $VCPKG_PATH | sed 's/\\/\//g')
+            cmake -B build ${{matrix.platform.flags}} -DCMAKE_TOOLCHAIN_FILE=$VCPKG_PATH
           else
             cmake -B build ${{matrix.platform.flags}}
           fi
