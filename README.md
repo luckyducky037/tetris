@@ -1,7 +1,6 @@
 # Tetris AI
 
-A project that (hopefully):
-- A playable Tetris game in C++, using SFML
-- Some (yet to be decided) AI in Python to master Tetris
-
-Updates to come soon!
+This project has three modes:
+- A playable game of Tetris (that gets unreasonably fast very quickly :/)
+- Training mode, which takes a randomly initialized population or a previously generated population and selects the best
+- Uploads a set of weights and lets the AI play Tetris
