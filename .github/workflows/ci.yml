@@ -33,14 +33,18 @@ jobs:
       if: runner.os == 'MacOS'
       run: brew install sfml@2
 
-    - name: Install Windows Dependencies
+    - name: Set up vcpkg (Windows)
       if: runner.os == 'Windows'
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg
         ./bootstrap-vcpkg.bat
         ./vcpkg integrate install
-        cd vcpkg
+
+    - name: Install SFML via vcpkg (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        cd vcpkg  # Ensure we're inside the vcpkg directory
         ./vcpkg install sfml
 
     - name: Checkout
