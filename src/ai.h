@@ -134,7 +134,7 @@ double MLP(const std::vector<std::vector<double> >& W1, const std::vector<double
 std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid, std::vector<std::pair<int, int> > piece_location, char piece, std::vector<std::vector<double> > weights1, std::vector<double> weights2) {
     std::vector<char> moves = {'D'};
     std::vector<char> best_set = {'N'};
-    double best_score = INT_MIN;
+    double best_score = -10000000.0;
     std::vector<std::pair<int, int> > new_piece_location = piece_location;
     for (auto& p : new_piece_location) {
         p.first++;
