@@ -25,6 +25,9 @@ jobs:
           - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Install Linux Dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev libsfml-dev
@@ -38,7 +41,7 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
-          ./bootstrap-vcpkg.bat
+          ./bootstrap-vcpkg.bat -disableMetrics  # Add metrics opt-out
           ./vcpkg integrate install
 
       - name: Install SFML via vcpkg (Windows)
@@ -47,19 +50,12 @@ jobs:
           cd vcpkg  # Ensure we're inside the vcpkg directory
           ./vcpkg install sfml
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Configure
         run: |
           if [[ "${{ runner.os }}" == "Windows"* ]]; then
-            # Convert path to forward slashes for bash compatibility
-            VCPKG_PATH="${{ github.workspace }}\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
-            # Replace backslashes with forward slashes
-            VCPKG_PATH=$(echo $VCPKG_PATH | sed 's/\\/\//g')
-            cmake -B build ${{matrix.platform.flags}} -DCMAKE_TOOLCHAIN_FILE=$VCPKG_PATH
+            cmake -B build ${{ matrix.platform.flags }} ${{ matrix.config.flags }} -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
           else
-            cmake -B build ${{matrix.platform.flags}}
+            cmake -B build ${{ matrix.platform.flags }} ${{ matrix.config.flags }}
           fi
 
       - name: Build
