@@ -147,9 +147,9 @@ std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid
         }
         for (int i = 0; i < rot; i++) {
             moves.push_back('U');
-            std::cout << "Spinning... ";
+            // std::cout << "Spinning... ";
             new_piece_location = spin(new_piece_location, piece);
-            std::cout << "Spin successful\n";
+            // std::cout << "Spin successful\n";
         }
         int max_left = 0;
         for (; max_left < 6; max_left++) {
@@ -175,11 +175,11 @@ std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid
             }
         }
         for (int x = -1 * max_left; x <= 6; x++) {
-            std::cout << "Calculating best score for ";
-            for (char r : moves) {std::cout << r << " ";}
-            std::cout << "... ";
+            // std::cout << "Calculating best score for ";
+            // for (char r : moves) {std::cout << r << " ";}
+            // std::cout << "... ";
             double curr_score = MLP(weights1, weights2, grid_and_piece(grid, drop(grid, new_piece_location)));
-            std::cout << "score is " << curr_score << "\n";
+            // std::cout << "score is " << curr_score << "\n";
             if (best_score <= curr_score) {
                 best_score = curr_score;
                 best_set = moves;
@@ -210,7 +210,7 @@ std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid
             }
         }
     }
-    std::cout << "Found best move!\n";
+    // std::cout << "Found best move!\n";
     return best_set;
 }
 
@@ -243,6 +243,7 @@ std::vector<char> ai(
     assert(weights1.size() == 5 && weights2.size() == 5);
     assert(weights1[0].size() == 5);
 
+    /*
     std::cout << "Preparing inputs... \n";
 
     std::cout << "board: \n";
@@ -259,8 +260,10 @@ std::vector<char> ai(
         std::cout << "(" << p.first << ", " << p.second << "),  ";
     }
     std::cout << "\n";
+    */
 
     std::vector<std::vector<char> > grid = convert_board(board, piece_location);
+    /*
     std::cout << "Convert successful\n";
     for (auto& row : grid) {
         for (char c : row) {
@@ -268,16 +271,17 @@ std::vector<char> ai(
         }
         std::cout << "\n";
     }
+    */
     // std::vector<std::vector<double> > weights1(5, std::vector<double>(4, 0));
     // weights1 = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}, {0, 0, 0, 0}};
     // std::vector<double> weights2(5, 0);
     // weights2 = {-1500, -1, 1000000, -15, 0};
 
-    std::cout << "Generating best move... ";
+    // std::cout << "Generating best move... ";
     std::vector<char> res = generate_best_move(grid, piece_location, piece, weights1, weights2);
-    std::cout << "Generate best move successful: ";
-    for (char r : res) {std::cout << r << " ";}
-    std::cout << "\n";
+    // std::cout << "Generate best move successful: ";
+    // for (char r : res) {std::cout << r << " ";}
+    // std::cout << "\n";
     res.push_back(' ');
     return res;
 }

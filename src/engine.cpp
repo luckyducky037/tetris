@@ -282,7 +282,9 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                 }
             } else if (bottom(piece_location, pieces)) {
                 // std::cout << "Reached bottom" << std::endl;
-                score += 10;
+                // score += 10; // This was used to encourage optimal stacking
+                // in the early stages of training
+                // even if no lines were cleared.
                 int i = 0;
                 while (clear_line(pieces)) {i++;}
                 if (i == 1) {
@@ -472,6 +474,29 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
         hold_text.setFillColor(sf::Color::White);
         hold_text.setPosition(block_width * 2, grid_buffer_y);
         window.draw(hold_text);
+
+        sf::Text score_header;
+        score_header.setString("Score");
+        score_header.setFont(font);
+        score_header.setCharacterSize(24);
+        score_header.setFillColor(sf::Color::White);
+        score_header.setPosition(window_x / 2 - score_header.getGlobalBounds().width / 2, grid_buffer_y / 2 - block_width * 1.1);
+        window.draw(score_header);
+
+        sf::RectangleShape clear;
+        clear.setFillColor(sf::Color::Black);
+        clear.setSize(sf::Vector2f(block_width * 4, block_width));
+        clear.setOrigin(clear.getSize().x / 2, 0);
+        clear.setPosition(window_x / 2, grid_buffer_y / 2 - block_width * 0.1);
+        window.draw(clear);
+
+        sf::Text score_text;
+        score_text.setString(std::to_string(score));
+        score_text.setFont(font);
+        score_text.setCharacterSize(24);
+        score_text.setFillColor(sf::Color::White);
+        score_text.setPosition(window_x / 2 - score_text.getGlobalBounds().width / 2, grid_buffer_y / 2 - block_width * 0.1);
+        window.draw(score_text);
 
         window.display();
     }
