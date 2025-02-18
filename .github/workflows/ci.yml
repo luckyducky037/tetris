@@ -27,13 +27,18 @@ jobs:
     steps:
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev libsfml-dev
+
+    - name: Install MacOS Dependencies
+      if: runner.os == 'MacOS'
+      run: brew install sfml@2
+
+    - name: Install Windows Dependencies
+      if: runner.os == 'Windows'
+      run: choco install sfml
 
     - name: Checkout
       uses: actions/checkout@v4
-
-    - name: Install SFML
-      run: brew install sfml@2
 
     - name: Configure
       run: cmake -B build ${{matrix.platform.flags}} ${{matrix.config.flags}}
