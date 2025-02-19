@@ -319,7 +319,7 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                 last_key_pressed = moves[0];
                 moves.erase(moves.begin());
             } else if (ai_playing && moves.empty() && next_piece_on_board) {
-                moves = ai(pieces, piece_location, current_piece, hold_piece, next_piece, weights1, weights2);
+                moves = ai(pieces, piece_location, current_piece, hold_piece, next_piece, start_positions, weights1, weights2);
                 std::cout << "Moves to play: ";
                 for (auto m : moves) {
                     std::cout << m << " ";
