@@ -131,7 +131,7 @@ double best(const std::vector<double>& weights, const std::vector<std::vector<ch
 
 double MLP(const std::vector<std::vector<double> >& W1, const std::vector<double>& W2, const std::vector<std::vector<char> >& grid);
 
-std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid, std::vector<std::pair<int, int> > piece_location, char piece, std::vector<std::vector<double> > weights1, std::vector<double> weights2) {
+std::pair<std::vector<char>, double> generate_move(const std::vector<std::vector<char> >& grid, std::vector<std::pair<int, int> > piece_location, char piece, std::vector<std::vector<double> > weights1, std::vector<double> weights2) {
     std::vector<char> moves = {'D'};
     std::vector<char> best_set = {'N'};
     double best_score = -10000000.0;
@@ -211,14 +211,35 @@ std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid
         }
     }
     // std::cout << "Found best move!\n";
-    return best_set;
+    return std::make_pair(best_set, best_score);
+}
+
+std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid, std::vector<std::pair<int, int> > piece_location, char piece, std::vector<std::vector<double> > weights1, std::vector<double> weights2, const char hold, const char next, std::map<char, std::vector<std::pair<int, int> > > start_positions) {
+    std::pair<std::vector<char>, double> no_switch_res = generate_move(grid, piece_location, piece, weights1, weights2);
+    std::pair<std::vector<char>, double> switch_res;
+    std::vector<std::pair<int, int> > new_piece_location;
+    if (hold == '.') {
+        new_piece_location = start_positions[next];
+        switch_res = generate_move(grid, new_piece_location, next, weights1, weights2);
+    } else {
+        new_piece_location = start_positions[hold];
+        switch_res = generate_move(grid, new_piece_location, hold, weights1, weights2);
+    }
+    if (no_switch_res.second < switch_res.second) {
+        return no_switch_res.first;
+    }
+    std::vector<char> res = {'S'};
+    for (char move : switch_res.first) {
+        res.push_back(move);
+    }
+    return res;
 }
 
 double best(const std::vector<double>& weights, const std::vector<std::vector<char> >& grid) {
     return weights[0] * count_holes(grid) + weights[1] * aggregate_height(grid) + weights[2] * lines_full(grid) + weights[3] * bumpiness(grid);
 }
 
-double tanh(double val) {
+double tanh_func(double val) {
     return (exp(val) - exp(-val)) / (exp(val) + exp(-val));
 }
 
@@ -239,16 +260,17 @@ double MLP(const std::vector<std::vector<double> >& W1, const std::vector<double
     std::vector<double> hidden_layer(5, 0);
     double score = 0;
     for (int i = 0; i < W2.size(); i++) {
-        hidden_layer[i] = tanh(W1[i][0] * holes + W1[i][1] * aggregate + W1[i][2] * lines + W1[i][3] * bump + W1[i][4]);
+        hidden_layer[i] = tanh_func(W1[i][0] * holes + W1[i][1] * aggregate + W1[i][2] * lines + W1[i][3] * bump + W1[i][4]);
         score += W2[i] * hidden_layer[i];
     }
-    return tanh(score);
+    return tanh_func(score);
 }
 
 std::vector<char> ai(
     std::vector<std::vector<char> > board,
     std::vector<std::pair<int, int> > piece_location,
     char piece, char hold, char next,
+    std::map<char, std::vector<std::pair<int, int> > > start_positions,
     std::vector<std::vector<double> > weights1 = {{1, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 0, 0, 1, 0}, {0, 0, 0, 0, 0}},
     std::vector<double> weights2 = {-0.0015, -0.000001, 1, -0.000015, 0}) {
     assert(weights1.size() == 5 && weights2.size() == 5);
@@ -289,7 +311,7 @@ std::vector<char> ai(
     // weights2 = {-1500, -1, 1000000, -15, 0};
 
     // std::cout << "Generating best move... ";
-    std::vector<char> res = generate_best_move(grid, piece_location, piece, weights1, weights2);
+    std::vector<char> res = generate_best_move(grid, piece_location, piece, weights1, weights2, hold, next, start_positions);
     // std::cout << "Generate best move successful: ";
     // for (char r : res) {std::cout << r << " ";}
     // std::cout << "\n";
