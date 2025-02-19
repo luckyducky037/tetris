@@ -147,17 +147,17 @@ void train(int gen) {
         std::cout << "Reinitialize? (Y/N): ";
         std::cin >> reinit;
         if (reinit == 'N') {
-            population = retrieve_weights_vector("weights/w0.txt");
+            population = retrieve_weights_vector("weights/tanh-t1/w0.txt");
             total = population.size();
         } else if (reinit == 'Y') {
             std::cout << "Population size: ";
             std::cin >> total;
             population = generate_population(total);
             std::cout << "Initializing weights to w0.txt" << std::endl;
-            write_population(population, "weights/w0.txt");
+            write_population(population, "weights/tanh-t1/w0.txt");
         }
     } else {
-        std::string filename = "weights/w" + std::to_string(gen - 1) + ".txt";
+        std::string filename = "weights/tanh-t1/w" + std::to_string(gen - 1) + ".txt";
 		population = retrieve_weights_vector(filename);
         total = population.size();
     }
@@ -187,13 +187,14 @@ void train(int gen) {
     int it = 0;
     int bad_cut = total * 0.4;
     int min_keep = total * 0.9;
-    double lr = 1.0 / static_cast<double>(gen);
+    double lr;
     int num = 0;
     for (auto& p : fitness_rank) {
         if (it < bad_cut) {
             it++;
             continue;
         }
+        lr = 10.0 / sqrt(static_cast<double>(p.first));
         if (it < min_keep) {
             new_population.push_back(mutate(p.second, lr));
             num++;
@@ -216,7 +217,7 @@ void train(int gen) {
         num++;
     }
     print_population(new_population);
-    std::string filename = "weights/w" + std::to_string(gen) + ".txt";
+    std::string filename = "weights/tanh-t1/w" + std::to_string(gen) + ".txt";
     std::ofstream outfile (filename);
     outfile.close();
     std::cout << "Writing weights to " << filename << std::endl;

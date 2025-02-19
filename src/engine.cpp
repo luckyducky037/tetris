@@ -125,11 +125,6 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
     sf::RenderWindow window(sf::VideoMode(window_x, window_y), "Tetris");
 
     std::vector<sf::Vertex> vec_grid = make_grid(static_cast<float>(window_x), static_cast<float>(window_y), grid_buffer_x, grid_buffer_y, block_width);
-    sf::Vertex grid[vec_grid.size()];
-
-    for (int i = 0; i < vec_grid.size(); i++) {
-        grid[i] = vec_grid[i];
-    }
 
     std::vector<char> piece_types = {'O', 'T', 'J', 'L', 'Z', 'S', 'I'};
     std::map<char, std::vector<std::pair<int, int> > > start_positions;
@@ -282,7 +277,7 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                 }
             } else if (bottom(piece_location, pieces)) {
                 // std::cout << "Reached bottom" << std::endl;
-                // score += 10; // This was used to encourage optimal stacking
+                score += 1; // This is used to encourage optimal stacking
                 // in the early stages of training
                 // even if no lines were cleared.
                 int i = 0;
@@ -450,7 +445,7 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
             KeyClock.restart();
         }
 
-        window.draw(grid, vec_grid.size(), sf::Lines);
+        window.draw(vec_grid.data(), vec_grid.size(), sf::Lines);
 
         display_box(window_x - grid_buffer_x + block_width, grid_buffer_y, window, color_map, window_x, window_y, grid_buffer_x, grid_buffer_y, block_width, next_piece, start_positions, shift);
         display_box(block_width, grid_buffer_y, window, color_map, window_x, window_y, grid_buffer_x, grid_buffer_y, block_width, hold_piece, start_positions, shift);

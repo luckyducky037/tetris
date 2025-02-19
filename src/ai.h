@@ -218,20 +218,31 @@ double best(const std::vector<double>& weights, const std::vector<std::vector<ch
     return weights[0] * count_holes(grid) + weights[1] * aggregate_height(grid) + weights[2] * lines_full(grid) + weights[3] * bumpiness(grid);
 }
 
+double tanh(double val) {
+    return (exp(val) - exp(-val)) / (exp(val) + exp(-val));
+}
+
 double MLP(const std::vector<std::vector<double> >& W1, const std::vector<double>& W2, const std::vector<std::vector<char> >& grid) {
     double lines = lines_full(grid);
+    lines = 2 * lines / 4 - 1;
     std::vector<std::vector<char> > new_grid = grid;
     while (clear_line(new_grid)) {;}
     double holes = count_holes(new_grid);
+    double max_holes = 30; // reasonably. The theoretical maximum is 150
+    double min_holes = 0;
+    holes = 2 * (holes - min_holes) / (max_holes - min_holes) - 1;
     double aggregate = aggregate_height(new_grid);
+    aggregate = 2 * aggregate / 200 - 1;
     double bump = bumpiness(new_grid);
+    double max_bump = 500; // reasonably. The theoretical maximum is 3600
+    bump = 2 * bump / max_bump - 1;
     std::vector<double> hidden_layer(5, 0);
     double score = 0;
     for (int i = 0; i < W2.size(); i++) {
-        hidden_layer[i] = W1[i][0] * holes + W1[i][1] * aggregate + W1[i][2] * lines + W1[i][3] * bump + W1[i][4];
+        hidden_layer[i] = tanh(W1[i][0] * holes + W1[i][1] * aggregate + W1[i][2] * lines + W1[i][3] * bump + W1[i][4]);
         score += W2[i] * hidden_layer[i];
     }
-    return score;
+    return tanh(score);
 }
 
 std::vector<char> ai(
