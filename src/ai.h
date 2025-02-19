@@ -225,7 +225,7 @@ std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid
         new_piece_location = start_positions[hold];
         switch_res = generate_move(grid, new_piece_location, hold, weights1, weights2);
     }
-    if (no_switch_res.second < switch_res.second) {
+    if (no_switch_res.second > switch_res.second) {
         return no_switch_res.first;
     }
     std::vector<char> res = {'S'};
