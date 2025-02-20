@@ -6,7 +6,7 @@ int main() {
     std::cin >> choice;
     std::vector<char> piece_list = {};
     if (choice == 1) {
-        mainloop(false, piece_list);
+        mainloop(false, false, piece_list);
     } else if (choice == 2) {
         std::cout << "Weight file: ";
         std::string file;
@@ -16,7 +16,7 @@ int main() {
         int num;
         std::cout << "Enter weight number: ";
         std::cin >> num;
-        mainloop(true, piece_list, population[num - 1].first, population[num - 1].second);
+        mainloop(true, false, piece_list, population[num - 1].first, population[num - 1].second);
     } else if (choice == 3) {
         std::cout << "Generation: ";
         int gen;

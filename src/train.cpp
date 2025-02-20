@@ -63,7 +63,7 @@ long long fitness(W weights) {
         pieces++;
     }
     read_file.close();
-    int score = mainloop(true, piece_list, weights.first, weights.second);
+    int score = mainloop(true, true, piece_list, weights.first, weights.second);
     if (pieces >= piece_list.size()) {
         return score;
     }

@@ -114,7 +114,7 @@ void display_box(float leftmost_x, float topmost_y, sf::RenderWindow& window, st
     window.draw(frame, 8, sf::Lines);
 }
 
-long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}, {0, 0, 0, 0}},
+long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list, W1 weights1 = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}, {0, 0, 0, 0}},
     W2 weights2 = {-0.0015, -0.000001, 1, -0.000015, 0}) {
     const float window_x = 780;
     const float grid_buffer_x = 240;
@@ -205,6 +205,9 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
     long long score = 0;
     bool last_tet = false;
     long long lines = 0;
+    long long num_pieces = 0;
+    long long max_training_score = 100000;
+    long long max_pieces = max_training_score / 100 * 2.5;
     // bool ai_playing = true;
     bool next_piece_on_board = false;
     std::vector<char> moves;
@@ -249,6 +252,10 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                 no_press = true;
             }
             if (current_piece == '.') {
+                if (training && (score - num_pieces >= max_training_score)) {
+                    std::cout << "Max score of " << max_training_score << " reached, using " << num_pieces << " pieces." << std::endl;
+                    return max_training_score * (max_pieces / num_pieces);
+                }
                 next_piece_on_board = true;
                 current_piece = next_piece;
                 if (piece_list.size() <= piece_number) {
@@ -277,6 +284,7 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                 }
             } else if (bottom(piece_location, pieces)) {
                 // std::cout << "Reached bottom" << std::endl;
+                num_pieces += 1;
                 score += 1; // This is used to encourage optimal stacking
                 // in the early stages of training
                 // even if no lines were cleared.
@@ -292,7 +300,7 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                     score += 800 * (last_tet ? 1.5 : 1);
                     last_tet = true;
                 }
-                if (i != 4) {last_tet = false;}
+                if (i != 4 && i != 0) {last_tet = false;}
                 lines += i;
                 if (ai_playing) {
                     UpdateBuffer = 100;
@@ -319,7 +327,7 @@ long long mainloop(bool ai_playing, std::vector<char>& piece_list, W1 weights1 =
                 last_key_pressed = moves[0];
                 moves.erase(moves.begin());
             } else if (ai_playing && moves.empty() && next_piece_on_board) {
-                moves = ai(pieces, piece_location, current_piece, hold_piece, next_piece, start_positions, weights1, weights2);
+                moves = ai(pieces, piece_location, current_piece, training, hold_piece, next_piece, start_positions, weights1, weights2);
                 std::cout << "Moves to play: ";
                 for (auto m : moves) {
                     std::cout << m << " ";

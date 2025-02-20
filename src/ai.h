@@ -214,8 +214,11 @@ std::pair<std::vector<char>, double> generate_move(const std::vector<std::vector
     return std::make_pair(best_set, best_score);
 }
 
-std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid, std::vector<std::pair<int, int> > piece_location, char piece, std::vector<std::vector<double> > weights1, std::vector<double> weights2, const char hold, const char next, std::map<char, std::vector<std::pair<int, int> > > start_positions) {
+std::vector<char> generate_best_move(const std::vector<std::vector<char> >& grid, std::vector<std::pair<int, int> > piece_location, char piece, std::vector<std::vector<double> > weights1, std::vector<double> weights2, const bool training, const char hold, const char next, std::map<char, std::vector<std::pair<int, int> > > start_positions) {
     std::pair<std::vector<char>, double> no_switch_res = generate_move(grid, piece_location, piece, weights1, weights2);
+    if (training) {
+        return no_switch_res.first;
+    }
     std::pair<std::vector<char>, double> switch_res;
     std::vector<std::pair<int, int> > new_piece_location;
     if (hold == '.') {
@@ -269,7 +272,7 @@ double MLP(const std::vector<std::vector<double> >& W1, const std::vector<double
 std::vector<char> ai(
     std::vector<std::vector<char> > board,
     std::vector<std::pair<int, int> > piece_location,
-    char piece, char hold, char next,
+    char piece, bool training, char hold, char next,
     std::map<char, std::vector<std::pair<int, int> > > start_positions,
     std::vector<std::vector<double> > weights1 = {{1, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 0, 0, 1, 0}, {0, 0, 0, 0, 0}},
     std::vector<double> weights2 = {-0.0015, -0.000001, 1, -0.000015, 0}) {
@@ -311,7 +314,7 @@ std::vector<char> ai(
     // weights2 = {-1500, -1, 1000000, -15, 0};
 
     // std::cout << "Generating best move... ";
-    std::vector<char> res = generate_best_move(grid, piece_location, piece, weights1, weights2, hold, next, start_positions);
+    std::vector<char> res = generate_best_move(grid, piece_location, piece, weights1, weights2, training, hold, next, start_positions);
     // std::cout << "Generate best move successful: ";
     // for (char r : res) {std::cout << r << " ";}
     // std::cout << "\n";
