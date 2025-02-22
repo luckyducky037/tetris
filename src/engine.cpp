@@ -207,7 +207,8 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
     long long lines = 0;
     long long num_pieces = 0;
     long long max_training_score = 100000;
-    long long max_pieces = max_training_score / 100 * 2.5;
+    long long max_pieces = max_training_score / 40;
+    // long long min_pieces = (max_training_score + 119) / 120
     // bool ai_playing = true;
     bool next_piece_on_board = false;
     std::vector<char> moves;
@@ -254,7 +255,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
             if (current_piece == '.') {
                 if (training && (score - num_pieces >= max_training_score)) {
                     std::cout << "Max score of " << max_training_score << " reached, using " << num_pieces << " pieces." << std::endl;
-                    return max_training_score * (max_pieces / num_pieces);
+                    return (max_training_score * max_pieces) / num_pieces;
                 }
                 next_piece_on_board = true;
                 current_piece = next_piece;
