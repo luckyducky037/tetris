@@ -185,6 +185,8 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
     sf::Time KeyBuffer = KeyClock.getElapsedTime();
     float UpdateBuffer = 1000;
     sf::Time MinBuffer = sf::milliseconds(50);
+    int drop_multiplier = 2;
+    int iterator = 0;
     Clock.restart();
 
     srand(time(0));
@@ -206,7 +208,8 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
     bool last_tet = false;
     long long lines = 0;
     long long num_pieces = 0;
-    long long max_training_score = 100000;
+    bool disable_hold_piece = training && false;
+    long long max_training_score = disable_hold_piece ? 50000 : 100000;
     long long max_pieces = max_training_score / 40;
     // long long min_pieces = (max_training_score + 119) / 120
     // bool ai_playing = true;
@@ -248,7 +251,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
             }
         }
 
-        if (Time >= sf::milliseconds(UpdateBuffer)) {
+        if (Time >= sf::milliseconds(UpdateBuffer) || (training && (iterator++ % drop_multiplier == 0))) {
             if (ai_playing) {
                 no_press = true;
             }
@@ -322,18 +325,20 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
             Clock.restart();
         }
 
-        if (KeyBuffer >= MinBuffer && current_piece != '.' && no_press) {
+        if ((KeyBuffer >= MinBuffer && current_piece != '.' && no_press) || training) {
             if (ai_playing && !moves.empty()) {
                 next_piece_on_board = false;
                 last_key_pressed = moves[0];
                 moves.erase(moves.begin());
             } else if (ai_playing && moves.empty() && next_piece_on_board) {
-                moves = ai(pieces, piece_location, current_piece, training, hold_piece, next_piece, start_positions, weights1, weights2);
-                std::cout << "Moves to play: ";
-                for (auto m : moves) {
-                    std::cout << m << " ";
+                moves = ai(pieces, piece_location, current_piece, training, disable_hold_piece, hold_piece, next_piece, start_positions, weights1, weights2);
+                if (!training) {
+                    std::cout << "Moves to play: ";
+                    for (auto m : moves) {
+                        std::cout << m << " ";
+                    }
+                    std::cout << "\n";
                 }
-                std::cout << "\n";
             }
             if (last_key_pressed == 'L'
                 || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -438,9 +443,10 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
                     piece_location = start_positions[current_piece];
                     for (auto p : piece_location) {
                         if (pieces[p.first][p.second] != '.') {
-                            std::cout << "Top is reached; game is over" << std::endl;
+                            // std::cout << "Top is reached; game is over" << std::endl;
                             game_over = true;
-                            break;
+                            std::cout << "Game Over. Your final score is " << score << " with " << lines << " lines cleared.\n";
+                            return score;
                         }
                         pieces[p.first][p.second] = current_piece;
                     }
