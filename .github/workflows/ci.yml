@@ -48,7 +48,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           cd vcpkg  # Ensure we're inside the vcpkg directory
-          ./vcpkg install sfml:x64-windows
+          ./vcpkg install --triplet x64-windows
 
       - name: Configure
         run: |
