@@ -41,14 +41,15 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
-          ./bootstrap-vcpkg.bat -disableMetrics  # Add metrics opt-out
+          ./bootstrap-vcpkg.bat -disableMetrics
           ./vcpkg integrate install
 
       - name: Install SFML via vcpkg (Windows)
         if: runner.os == 'Windows'
         run: |
-          cd vcpkg  # Ensure we're inside the vcpkg directory
-          ./vcpkg install --triplet x64-windows
+          cd vcpkg
+          git checkout df6921c0b6cdf95269a4a3093e267b59e4bf0f5b
+          ./vcpkg install sfml:x64-windows
 
       - name: Configure
         run: |
