@@ -48,7 +48,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           cd vcpkg  # Ensure we're inside the vcpkg directory
-          ./vcpkg install sfml@2.5.1
+          ./vcpkg install sfml:x64-windows
 
       - name: Configure
         run: |
