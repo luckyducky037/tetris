@@ -41,6 +41,7 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
+          git checkout df6921c0b6cdf95269a4a3093e267b59e4bf0f5b
           ./bootstrap-vcpkg.bat -disableMetrics
           ./vcpkg integrate install
 
