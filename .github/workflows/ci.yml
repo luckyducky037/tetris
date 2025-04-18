@@ -36,6 +36,13 @@ jobs:
         if: runner.os == 'MacOS'
         run: brew install sfml@2
 
+      - name: Expose SFML 2.6 to CMake
+        if: runner.os == 'MacOS'
+        run: |
+          SFML_PREFIX="$(brew --prefix sfml@2)"
+          echo "SFML_DIR=$SFML_PREFIX/lib/cmake/SFML"     >> "$GITHUB_ENV"
+          echo "PKG_CONFIG_PATH=$SFML_PREFIX/lib/pkgconfig" >> "$GITHUB_ENV"
+
       - name: Set up vcpkg (Windows)
         if: runner.os == 'Windows'
         run: |
