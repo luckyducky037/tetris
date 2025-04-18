@@ -1,0 +1,3 @@
+/Users/leonardozhou/Desktop/code/aiproj/tetris/tetris/cmake-build-debug/CMakeFiles/Tetris.dir
+/Users/leonardozhou/Desktop/code/aiproj/tetris/tetris/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/leonardozhou/Desktop/code/aiproj/tetris/tetris/cmake-build-debug/CMakeFiles/rebuild_cache.dir

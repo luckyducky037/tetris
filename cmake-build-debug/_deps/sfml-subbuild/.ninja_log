@@ -1,0 +1,21 @@
+# ninja log v6
+1	83	1734726714372413584	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-mkdir	9f06a72acfa0a299
+1	83	1734726714372413584	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-mkdir	9f06a72acfa0a299
+83	16397	1734726730686856632	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-download	1cf11d82d83853b8
+83	16397	1734726730686856632	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-download	1cf11d82d83853b8
+16397	16468	1734726730688092757	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-update	78feea80dde1ab9d
+16397	16468	1734726730688092757	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-update	78feea80dde1ab9d
+16468	16500	1734726730790565061	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-patch	655d14e6f9133616
+16468	16500	1734726730790565061	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-patch	655d14e6f9133616
+16500	16532	1734726730822005053	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-configure	4fc5e443eeecd5a9
+16500	16532	1734726730822005053	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-configure	4fc5e443eeecd5a9
+16532	16559	1734726730848983378	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-build	4b7f8ef6e4a80ca1
+16532	16559	1734726730848983378	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-build	4b7f8ef6e4a80ca1
+16559	16597	1734726730887460326	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-install	355b220f7b979e90
+16559	16597	1734726730887460326	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-install	355b220f7b979e90
+16597	16632	1734726730922532191	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-test	881086b25a90e5b5
+16597	16632	1734726730922532191	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-test	881086b25a90e5b5
+16632	16674	1734726730964128846	CMakeFiles/sfml-populate-complete	654600837815727d
+16632	16674	1734726730964128846	sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-done	654600837815727d
+16632	16674	1734726730964128846	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/CMakeFiles/sfml-populate-complete	654600837815727d
+16632	16674	1734726730964128846	/Users/leonardozhou/Desktop/code/c++/tetris/tetris/cmake-build-debug/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-done	654600837815727d
