@@ -251,7 +251,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
             }
         }
 
-        if (Time >= sf::milliseconds(UpdateBuffer) || (training && (iterator++ % drop_multiplier == 0))) {
+        if (Time >= sf::milliseconds(UpdateBuffer) || ((training || ai_playing) && (iterator++ % drop_multiplier == 0))) {
             if (ai_playing) {
                 no_press = true;
             }
@@ -325,7 +325,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
             Clock.restart();
         }
 
-        if ((KeyBuffer >= MinBuffer && current_piece != '.' && no_press) || training) {
+        if ((KeyBuffer >= MinBuffer && current_piece != '.' && no_press) || (training || ai_playing)) {
             if (ai_playing && !moves.empty()) {
                 next_piece_on_board = false;
                 last_key_pressed = moves[0];
@@ -341,7 +341,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
                 }
             }
             if (last_key_pressed == 'L'
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 ) {
                 // std::cout << "Left pressed" << std::endl;
                 last_key_pressed = '.';
@@ -367,7 +367,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
                     add_piece(piece_location, pieces, current_piece);
                 }
             } else if (last_key_pressed == 'R'
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
                 ) {
                 // std::cout << "Right pressed" << std::endl;
                 last_key_pressed = '.';
@@ -393,7 +393,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
                     add_piece(piece_location, pieces, current_piece);
                 }
             } else if (last_key_pressed == 'U'
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
                 ) {
                 last_key_pressed = '.';
                 // std::cout << "Up pressed" << std::endl;
@@ -413,7 +413,7 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
                     add_piece(piece_location, pieces, current_piece);
                 }
             } else if (last_key_pressed == ' '
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed((sf::Keyboard::Space)))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed((sf::Keyboard::Space)))
                 ) {
                 // std::cout << "Space pressed" << std::endl;
                 last_key_pressed = '.';
@@ -425,9 +425,9 @@ long long mainloop(bool ai_playing, bool training, std::vector<char>& piece_list
                     add_piece(piece_location, pieces, current_piece);
                 }
             } else if ((last_key_pressed == 'S'
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
-                || (ai_playing ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+                || ((ai_playing || training) ? false : sf::Keyboard::isKeyPressed(sf::Keyboard::C))
                 ) && !recent_switch) {
                 // std::cout << "Hold key pressed" << std::endl;
                 last_key_pressed = '.';
